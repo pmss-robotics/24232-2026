@@ -25,14 +25,18 @@ android {
 
 dependencies {
     implementation project(':FtcRobotController')
+    implementation 'org.ftclib.ftclib:core:2.1.1' // core
+    implementation 'com.acmerobotics.dashboard:dashboard:0.5.0' // AcmeRobotics dashboard
     implementation "com.acmerobotics.roadrunner:ftc:0.1.25"
     implementation "com.acmerobotics.roadrunner:core:1.0.1"
     implementation "com.acmerobotics.roadrunner:actions:1.0.1"
-    implementation "com.acmerobotics.dashboard:dashboard:0.5.1"
+
+    implementation 'io.github.skeleton-army.marrow:core:0.1.2' // Prompter
+    implementation 'io.github.skeleton-army.marrow:ftclib:0.1.2' // Prompter for FTCLib
+
 }
 
 repositories {
-    maven {
-        url = 'https://maven.brott.dev/'
-    }
+    maven { url = 'https://mymaven.bylazar.com/releases' } // ArcRobotics Command based system
+    maven { url = 'https://maven.brott.dev/' } // AcmeRobotics dashboard
 }
