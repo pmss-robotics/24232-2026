@@ -12,7 +12,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.States;
 
 public class FlywheelSubsystem extends SubsystemBase {
-    private DcMotorEx flywheel;
+    private DcMotorEx flywheel1;
+
+    private DcMotorEx flywheel2;
+
 
     private final Telemetry telemetry;
 
@@ -27,11 +30,12 @@ public class FlywheelSubsystem extends SubsystemBase {
 
         currentState = States.Flywheel.stopped;
 
-        flywheel = hardwareMap.get(DcMotorEx.class, "flywheel1");
+        flywheel1 = hardwareMap.get(DcMotorEx.class, "flywheel1");
 
-        flywheel = hardwareMap.get(DcMotorEx.class, "flywheel2");
+        flywheel2 = hardwareMap.get(DcMotorEx.class, "flywheel2");
 
-        flywheel.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheel1.setDirection(DcMotorSimple.Direction.REVERSE);
+        flywheel2.setDirection(DcMotorSimple.Direction.FORWARD);
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
@@ -53,7 +57,8 @@ public class FlywheelSubsystem extends SubsystemBase {
     }
 
     public void holdSpeed() {
-        flywheel.setPower(clamp(speed/voltageSensor.getVoltage(),0,1));
+        flywheel1.setPower(clamp(speed/voltageSensor.getVoltage(),0,1));
+        flywheel2.setPower(clamp(speed/voltageSensor.getVoltage(),0,1));
         telemetry.addData("flywheel power", speed);
     }
 
@@ -61,7 +66,8 @@ public class FlywheelSubsystem extends SubsystemBase {
         speed = power;
         power /= voltageSensor.getVoltage();
 
-        flywheel.setPower(clamp(power,-1.0,1.0));
+        flywheel1.setPower(clamp(power,-1.0,1.0));
+        flywheel2.setPower(clamp(power,-1.0,1.0));
 
         if (power == 0) {
             currentState = States.Flywheel.stopped;
