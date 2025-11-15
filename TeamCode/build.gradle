@@ -37,6 +37,7 @@ dependencies {
 }
 
 repositories {
+    maven { url = 'https://maven.pedropathing.com' } // Pedro
     maven { url = 'https://mymaven.bylazar.com/releases' } // ArcRobotics Command based system
     maven { url = 'https://maven.brott.dev/' } // AcmeRobotics dashboard
 }

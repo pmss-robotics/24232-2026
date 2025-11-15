@@ -6,6 +6,8 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.CommandOpMode;
 import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.RunCommand;
+import com.arcrobotics.ftclib.command.SequentialCommandGroup;
+import com.arcrobotics.ftclib.command.WaitCommand;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -22,6 +24,7 @@ public class TeleOp extends CommandOpMode{
 
     DriveSubsystem drive;
 
+    OuttakeSubsystem outtake;
 
 
     public static double driveMult = 1;
@@ -50,6 +53,24 @@ public class TeleOp extends CommandOpMode{
                 () -> driver1.getLeftY() * driveMult,
                 () -> -driver1.getRightX() * driveMult,
                 true);
+
+        // Flywheel Control
+        new GamepadButton(driver1, GamepadKeys.Button.Y)
+                .toggleWhenPressed(
+                        new InstantCommand(() -> outtake.setPower(0.0)),
+                        new InstantCommand(() -> outtake.setPower(OuttakeSubsystem.flywheelVelocity)));
+
+        // Kicker Control
+        new GamepadButton(driver1, GamepadKeys.Button.RIGHT_BUMPER
+        )
+                .whenPressed(
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> outtake.kick()),
+                                new WaitCommand(600),
+                                new InstantCommand(() -> outtake.home())
+                        ));
+
+
 
 
 
