@@ -44,7 +44,7 @@ public class TeleOp extends CommandOpMode{
 
 
 
-
+        outtake = new OuttakeSubsystem(hardwareMap, telemetry, true);
 
 
         // Drive
