@@ -4,6 +4,7 @@ import static com.acmerobotics.roadrunner.Math.clamp;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -19,7 +20,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.StallTimer;
 import org.firstinspires.ftc.teamcode.util.States;
-
+@Disabled
 @Config
 public class OuttakeSubsystem extends SubsystemBase {
     private DcMotorEx flywheel;
