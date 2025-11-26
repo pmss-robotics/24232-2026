@@ -13,10 +13,6 @@ public class States {
         spinning
     }
 
-    public enum Kicker {
-        home,
-        kick
-    }
 
     public enum Alliance {
         Red,

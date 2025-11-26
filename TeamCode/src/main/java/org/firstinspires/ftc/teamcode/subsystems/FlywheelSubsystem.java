@@ -4,7 +4,6 @@ import static com.acmerobotics.roadrunner.Math.clamp;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.command.SubsystemBase;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -20,48 +19,46 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.StallTimer;
 import org.firstinspires.ftc.teamcode.util.States;
-@Disabled
+
 @Config
-public class OuttakeSubsystem extends SubsystemBase {
+public class FlywheelSubsystem extends SubsystemBase {
     private DcMotorEx flywheel;
-    private ServoImplEx Kicker;
+
     private Telemetry telemetry;
     private VoltageSensor voltageSensor;
 
     public States.Flywheel flywheelState;
-    public States.Kicker kickerState;
+
 
     public static double flywheelVelocity = 12, flywheelMaxCurrent = 7, flywheelStallTimeout = 3000;
 
-    public static double Home =0, Kick =60;
+
     private double speed;
     private double kTarget;
     private StallTimer stallTimer;
 
-    public OuttakeSubsystem(HardwareMap hardwareMap, Telemetry telemetry, boolean useKicker) {
+    /**
+     * To access Flywheel and Servo Kicker control
+     * @param hardwareMap the OpMode's hardwareMap
+     * @param telemetry the OpMode's telemetry
+     **/
+    public FlywheelSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
         flywheel = hardwareMap.get(DcMotorEx.class, "flywheel");
 
-        if (useKicker) {
-            Kicker = hardwareMap.get(ServoImplEx.class, "Kicker");
 
-        }
 
         flywheel.setDirection(DcMotorEx.Direction.FORWARD);
-        flywheel.setCurrentAlert(4, CurrentUnit.AMPS);
+        flywheel.setCurrentAlert(flywheelMaxCurrent, CurrentUnit.AMPS);
         stallTimer = new StallTimer(flywheelStallTimeout, ElapsedTime.Resolution.MILLISECONDS);
 
         voltageSensor = hardwareMap.voltageSensor.iterator().next();
 
         flywheelState = States.Flywheel.stopped;
-        kickerState = States.Kicker.home;
 
-        if (useKicker) {
-            Kicker.setPwmRange(new PwmControl.PwmRange(500, 2500));
 
-            Kicker.setPosition(scale(Home));
-        }
+
 
     }
 
@@ -81,11 +78,15 @@ public class OuttakeSubsystem extends SubsystemBase {
     }
 
     public void holdSpeed() {
-        //flywheel.setPower(clamp(speed/voltageSensor.getVoltage(),0,1));
-        //if (flywheel.isOverCurrent()) stallTimer.stalling();
-        //else stallTimer.motorOn();
-        flywheel.setPower(speed);
-        //if (stallTimer.shutOff()) flywheel.setMotorDisable();
+        //flywheel.setPower(speed);
+
+
+        flywheel.setPower(clamp(speed/voltageSensor.getVoltage(),0,1));
+
+        if (flywheel.isOverCurrent()) stallTimer.stalling();
+        else stallTimer.motorOn();
+
+        if (stallTimer.shutOff()) flywheel.setMotorDisable();
 
         telemetry.addData("flywheel voltage", speed);
         // telemetry.addData("flywheel current", flywheel.getCurrent(CurrentUnit.AMPS));
@@ -94,12 +95,13 @@ public class OuttakeSubsystem extends SubsystemBase {
     }
 
     public void setPower(double power) {
-        if (power > 0) speed = 1;
-        else speed = 0;
-        //speed = power;
-        //power /= voltageSensor.getVoltage();
+        //if (power > 0) speed = 1;
+        //else speed = 0;
+        speed = power;
+        power /= voltageSensor.getVoltage();
 
-        flywheel.setPower(speed);
+        //flywheel.setPower(speed);
+        flywheel.setPower(clamp(power,-1.0,1.0));
 
         if (power == 0) {
             flywheelState = States.Flywheel.stopped;
@@ -108,13 +110,7 @@ public class OuttakeSubsystem extends SubsystemBase {
         }
     }
 
-    public void kick() {
-        Kicker.setPosition(scale(Kick));
-        }
 
-    public void home() {
-        Kicker.setPosition(scale(Home));
-        }
 
     public void resetMotor() {
         speed = 0;
