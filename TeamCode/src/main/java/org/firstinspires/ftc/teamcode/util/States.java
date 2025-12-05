@@ -13,6 +13,11 @@ public class States {
         spinning
     }
 
+    public enum Intake {
+        stopped,
+        feeding,
+        reverse
+    }
 
     public enum Alliance {
         Red,
