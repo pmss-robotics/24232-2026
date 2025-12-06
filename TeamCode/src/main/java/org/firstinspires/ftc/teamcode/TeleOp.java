@@ -96,7 +96,7 @@ public class TeleOp extends CommandOpMode{
                         new InstantCommand(() -> Spindex.outtakep3()
                         ));
         // Kicker Control
-        new GamepadButton(driver1, GamepadKeys.Button.RIGHT_TRIGGER)
+        new GamepadButton(driver1, GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(
                         new SequentialCommandGroup(
                                 new InstantCommand(() -> Kicker.kick()),
