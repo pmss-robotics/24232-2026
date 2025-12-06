@@ -20,12 +20,12 @@ import org.firstinspires.ftc.teamcode.util.States;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp
 public class TeleOp extends CommandOpMode{
-    GamepadEx driver1, driver2;
-
+    GamepadEx driver1;
     DriveSubsystem drive;
     IntakeSubsystem intake;
-    //OuttakeSubsystem outtake;
-
+    SpindexSubsystem Spindex;
+    FlywheelSubsystem Flywheel;
+    KickerSubsystem Kicker;
 
     public static double driveMult = 1;
 
@@ -42,7 +42,7 @@ public class TeleOp extends CommandOpMode{
 
         drive = new DriveSubsystem(new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0)), telemetry);
 
-
+        Kicker = new KickerSubsystem(hardwareMap, telemetry, true);
         intake = new IntakeSubsystem(hardwareMap, telemetry);
         //outtake = new OuttakeSubsystem(hardwareMap, telemetry, true);
 
@@ -54,20 +54,55 @@ public class TeleOp extends CommandOpMode{
                 () -> -driver1.getRightX() * driveMult,
                 true);
 
-        // Flywheel Control
-        //new GamepadButton(driver1, GamepadKeys.Button.Y)
-        //        .toggleWhenPressed(
-        //                new InstantCommand(() -> outtake.setPower(0.0)),
-        //                new InstantCommand(() -> outtake.setPower(OuttakeSubsystem.flywheelVelocity)));
+        // TODO: INTAKE INTEGRATION
+        new GamepadButton(driver1, GamepadKeys.Button.RIGHT_BUMPER)
+                .toggleWhenPressed(
+                        new InstantCommand(() -> intake.setPower(0.0)),
+                        new InstantCommand(() -> intake.setPower(12.0))
+                );
 
+        new GamepadButton(driver1, GamepadKeys.Button.Y)
+                .toggleWhenPressed(
+                        new InstantCommand(() -> Flywheel.setPower(0.0)),
+                        new InstantCommand(() -> Flywheel.setPower(FlywheelSubsystem.flywheelVelocity)));
+
+        new GamepadButton(driver1, GamepadKeys.Button.X)
+                .whenPressed(
+                        new InstantCommand(() -> Spindex.intakep1()
+                        ));
+
+        new GamepadButton(driver1, GamepadKeys.Button.A)
+                .whenPressed(
+                        new InstantCommand(() -> Spindex.intakep2()
+                        ));
+
+        new GamepadButton(driver1, GamepadKeys.Button.B)
+                .whenPressed(
+                        new InstantCommand(() -> Spindex.intakep3()
+                        ));
+
+        new GamepadButton(driver1, GamepadKeys.Button.DPAD_LEFT)
+                .whenPressed(
+                        new InstantCommand(() -> Spindex.outtakep1()
+                        ));
+
+        new GamepadButton(driver1, GamepadKeys.Button.DPAD_DOWN)
+                .whenPressed(
+                        new InstantCommand(() -> Spindex.outtakep2()
+                        ));
+
+        new GamepadButton(driver1, GamepadKeys.Button.DPAD_RIGHT)
+                .whenPressed(
+                        new InstantCommand(() -> Spindex.outtakep3()
+                        ));
         // Kicker Control
-        //new GamepadButton(driver1, GamepadKeys.Button.RIGHT_BUMPER)
-        //        .whenPressed(
-        //                new SequentialCommandGroup(
-        //                        new InstantCommand(() -> outtake.kick()),
-        //                        new WaitCommand(600),
-        //                        new InstantCommand(() -> outtake.home())
-        //                ));
+        new GamepadButton(driver1, GamepadKeys.Button.RIGHT_TRIGGER)
+                .whenPressed(
+                        new SequentialCommandGroup(
+                                new InstantCommand(() -> Kicker.kick()),
+                                new WaitCommand(600),
+                                new InstantCommand(() -> Kicker.home())
+                        ));
 
 
 
