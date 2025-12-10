@@ -49,7 +49,7 @@ public class FlywheelTest extends CommandOpMode{
         new GamepadButton(driver2, GamepadKeys.Button.X)
                 .toggleWhenPressed(
                         new InstantCommand(() -> flywheel.setPower(0.0)),
-                        new InstantCommand(() -> flywheel.setPower(12.0)));
+                        new InstantCommand(() -> flywheel.setPower(8.0)));
 
     }
 }

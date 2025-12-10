@@ -49,7 +49,7 @@ public class FlywheelSubsystem extends SubsystemBase {
 
 
 
-        flywheel.setDirection(DcMotorEx.Direction.FORWARD);
+        flywheel.setDirection(DcMotorEx.Direction.REVERSE);
         flywheel.setCurrentAlert(flywheelMaxCurrent, CurrentUnit.AMPS);
         stallTimer = new StallTimer(flywheelStallTimeout, ElapsedTime.Resolution.MILLISECONDS);
 

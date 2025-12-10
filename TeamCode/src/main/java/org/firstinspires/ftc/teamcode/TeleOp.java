@@ -61,10 +61,10 @@ public class TeleOp extends CommandOpMode{
                         new InstantCommand(() -> intake.setPower(12.0))
                 );
 
-        new GamepadButton(driver1, GamepadKeys.Button.Y)
-                .toggleWhenPressed(
-                        new InstantCommand(() -> Flywheel.setPower(0.0)),
-                        new InstantCommand(() -> Flywheel.setPower(FlywheelSubsystem.flywheelVelocity)));
+        //new GamepadButton(driver1, GamepadKeys.Button.Y)
+        //        .toggleWhenPressed(
+        //                new InstantCommand(() -> Flywheel.setPower(0.0)),
+        //                new InstantCommand(() -> Flywheel.setPower(FlywheelSubsystem.flywheelVelocity)));
 
         new GamepadButton(driver1, GamepadKeys.Button.X)
                 .whenPressed(
