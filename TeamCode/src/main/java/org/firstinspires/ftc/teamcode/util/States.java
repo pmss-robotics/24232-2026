@@ -13,16 +13,6 @@ public class States {
         spinning
     }
 
-    public enum Spindex {
-        intakep1,
-        intakep2,
-        intakep3,
-        outtakep1,
-        outtakep2,
-        outtakep3
-
-    }
-
     public enum Intake {
         stopped,
         feeding,

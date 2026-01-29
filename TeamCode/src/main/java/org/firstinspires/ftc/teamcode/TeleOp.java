@@ -23,7 +23,6 @@ public class TeleOp extends CommandOpMode{
     GamepadEx driver1;
     DriveSubsystem drive;
     IntakeSubsystem intake;
-    SpindexSubsystem Spindex;
     FlywheelSubsystem Flywheel;
     KickerSubsystem Kicker;
 
@@ -61,40 +60,12 @@ public class TeleOp extends CommandOpMode{
                         new InstantCommand(() -> intake.setPower(12.0))
                 );
 
-        //new GamepadButton(driver1, GamepadKeys.Button.Y)
-        //        .toggleWhenPressed(
-        //                new InstantCommand(() -> Flywheel.setPower(0.0)),
-        //                new InstantCommand(() -> Flywheel.setPower(FlywheelSubsystem.flywheelVelocity)));
+        new GamepadButton(driver1, GamepadKeys.Button.Y)
+                .toggleWhenPressed(
+                        new InstantCommand(() -> Flywheel.setPower(0.0)),
+                        new InstantCommand(() -> Flywheel.setPower(FlywheelSubsystem.flywheelVelocity)));
 
-        new GamepadButton(driver1, GamepadKeys.Button.X)
-                .whenPressed(
-                        new InstantCommand(() -> Spindex.intakep1()
-                        ));
 
-        new GamepadButton(driver1, GamepadKeys.Button.A)
-                .whenPressed(
-                        new InstantCommand(() -> Spindex.intakep2()
-                        ));
-
-        new GamepadButton(driver1, GamepadKeys.Button.B)
-                .whenPressed(
-                        new InstantCommand(() -> Spindex.intakep3()
-                        ));
-
-        new GamepadButton(driver1, GamepadKeys.Button.DPAD_LEFT)
-                .whenPressed(
-                        new InstantCommand(() -> Spindex.outtakep1()
-                        ));
-
-        new GamepadButton(driver1, GamepadKeys.Button.DPAD_DOWN)
-                .whenPressed(
-                        new InstantCommand(() -> Spindex.outtakep2()
-                        ));
-
-        new GamepadButton(driver1, GamepadKeys.Button.DPAD_RIGHT)
-                .whenPressed(
-                        new InstantCommand(() -> Spindex.outtakep3()
-                        ));
         // Kicker Control
         new GamepadButton(driver1, GamepadKeys.Button.LEFT_BUMPER)
                 .whenPressed(
