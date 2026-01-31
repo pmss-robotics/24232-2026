@@ -1,55 +1,56 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.arcrobotics.ftclib.command.CommandOpMode;
-import com.arcrobotics.ftclib.command.InstantCommand;
-import com.arcrobotics.ftclib.command.RunCommand;
-import com.arcrobotics.ftclib.command.button.GamepadButton;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.commands.DriveCommand;
-import org.firstinspires.ftc.teamcode.drive.MecanumDrive;
-import org.firstinspires.ftc.teamcode.subsystems.*;
-import org.firstinspires.ftc.teamcode.util.States;
-
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp
-public class FlywheelTest extends CommandOpMode{
-    GamepadEx driver1, driver2;
+import org.firstinspires.ftc.teamcode.subsystems.FlywheelSubsystem;
 
-    FlywheelSubsystem flywheel;
+@TeleOp(name = "Flywheel PIDF Tuner (Simple)")
+public class FlywheelTest extends OpMode {
 
-    public static double driveMult = 1;
+    private FlywheelSubsystem flywheel;
 
     @Override
-    public void initialize(){
+    public void init() {
+        flywheel = new FlywheelSubsystem(hardwareMap, telemetry);
+    }
 
+    @Override
+    public void loop() {
 
+        // --- RPM TUNING ---
+        if (gamepad2.right_bumper) flywheel.targetRPM += 50;
+        if (gamepad2.left_bumper)  flywheel.targetRPM -= 50;
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        telemetry.log().setDisplayOrder(Telemetry.Log.DisplayOrder.NEWEST_FIRST);
-        telemetry.log().setCapacity(8);
-        driver1 = new GamepadEx(gamepad1);
-        driver2 = new GamepadEx(gamepad2);
+        // --- kP TUNING ---
+        if (gamepad2.dpad_up)    flywheel.kP += 1;
+        if (gamepad2.dpad_down)  flywheel.kP -= 1;
 
-        FlywheelSubsystem flywheel = new FlywheelSubsystem(hardwareMap, telemetry);
+        // --- kF TUNING ---
+        if (gamepad2.dpad_right) flywheel.kF += 0.1;
+        if (gamepad2.dpad_left)  flywheel.kF -= 0.1;
 
+        // --- kD TUNING ---
+        if (gamepad2.y) flywheel.kD += 0.0001;
+        if (gamepad2.a) flywheel.kD -= 0.0001;
 
-        new GamepadButton(driver2, GamepadKeys.Button.A)
-                .whenReleased(new InstantCommand(() -> flywheel.setPower(8.0)));
+        // --- kI TUNING ---
+        if (gamepad2.x) flywheel.kI += 0.0001;
+        if (gamepad2.b) flywheel.kI -= 0.0001;
 
-        new GamepadButton(driver2, GamepadKeys.Button.B)
-                .whenReleased(new InstantCommand(() -> flywheel.setPower(0.0)));
+        // Apply PIDF + RPM
+        flywheel.applyPIDF();
+        flywheel.setRPM(flywheel.targetRPM);
 
-        new GamepadButton(driver2, GamepadKeys.Button.X)
-                .toggleWhenPressed(
-                        new InstantCommand(() -> flywheel.setPower(0.0)),
-                        new InstantCommand(() -> flywheel.setPower(8.0)));
+        // Telemetry
+        telemetry.addData("Target RPM", flywheel.targetRPM);
+        telemetry.addData("Actual RPM", flywheel.getActualRPM());
+        telemetry.addLine("---- PIDF ----");
+        telemetry.addData("kP", flywheel.kP);
+        telemetry.addData("kI", flywheel.kI);
+        telemetry.addData("kD", flywheel.kD);
+        telemetry.addData("kF", flywheel.kF);
 
+        telemetry.update();
     }
 }
